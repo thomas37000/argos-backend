@@ -1,14 +1,28 @@
-const http = require('http');
+const express = require("express");
+const equipages = require("./equipages");
+const PORT = 8080;
+const app = express();
 
-const hostname = '127.0.0.1';
-const port = 8000;
-
-const server = http.createServer((req, res) => {
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/plain');
-  res.end('Hello World');
+app.listen(PORT, (err) => {
+  if (err) {
+    console.error(err);
+  } else {
+    console.log(`Express server listening on ${PORT}`);
+  }
 });
 
-server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
+app.get("/equipages", (req, res) => {
+    res.status(200).json(equipages);
+});
+
+app.get("/equipages/:id", (req, res) => {
+    // find itérateur pour stocker directement
+    const equipage = equipages.find((equipage) => equipage.id === parseInt(req.params.id))
+    console.log(equipage);
+    
+    if(equipage !== undefined){
+        res.status(200).json(equipage);
+    }else {
+        res.status(404).json("this Argonaut don't exist");
+    }
 });
