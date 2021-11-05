@@ -42,12 +42,34 @@ router.post("/argonautes", (req, res) => {
     [nom, genre, age],
     (error) => {
       if (error) {
+        console.log("test", error);
         res.status(500).json({ error: error });
       } else {
-        res.status(200).json({
-          id: result.insertId,
-          ...req.body,
-        });
+        // le status 200 ne passe pas
+        // obliger de faire un log error pour que ça passe
+        console.log("error on SUBMIT", error);
+        
+        // res.status(200).json({
+        //   id: result.insertId,
+        //   ...req.body,
+        // });
+      }
+    }
+  );
+});
+
+router.delete("/:id", (req, res) => {
+  const idclient = req.params.id;
+  connection.query(
+    "DELETE FROM equipage WHERE idEquipage = ?",
+    [idclient],
+    (err) => {
+      if (err) {
+        res.status(500).send("la suppression n' a pas marché !");
+      } else {
+        res
+          .status(200)
+          .send("l'argonaute a bien était supprimé et envoyé aux requins !");
       }
     }
   );
